@@ -1,0 +1,1 @@
+{"resort_name": "Prueba random", "city": "Test Location", "zip_code": 500, "obj_id": 1}
