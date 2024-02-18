@@ -17,17 +17,13 @@ class Tools:
         # Obtener los números que ya existen
         numbers = []
         for file in files:
-            try:
-                file_name, _file_extension = os.path.splitext(file)
-                file_parts = file_name.split(f'{prefix}_')
-                for part in file_parts:
-                    if part.isdigit():
-                        numbers.append(int(part))
-            except ValueError:
-                pass
+            file_name, _file_extension = os.path.splitext(file)
+            part = file_name.replace(prefix, '')
+            if part.isdigit():
+                numbers.append(int(part))
 
         # If there are no numeric parts in filenames
         if not numbers:
             return 1
         else:
-            return max(numbers)
+            return max(numbers)+1
