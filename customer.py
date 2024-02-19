@@ -19,28 +19,21 @@ class Customer:
     cellphone = "TBD"
 
     # Definición de métodos
-    def __init__(self, obj_id, first_name, last_name, birthdate,
-                 email, cellphone):
+    def __init__(self, obj_id, first_name, last_name, birthdate):
         """Constructor de la clase"""
         self.first_name = first_name
         self.last_name = last_name
         self.birthdate = birthdate
-        self.email = email
-        self.cellphone = cellphone
         if -1 == obj_id:
             self.obj_id = self.get_next_id()
         else:
             self.obj_id = obj_id
 
-    def to_json(self):
-        """Método para imprimir los datos de la clase a Json"""
-        return json.dumps(self.__dict__)
-
     def guardar(self):
         """Método para guardar en archivo la información de la clase"""
         with open(f"./data/C{self.obj_id :04d}.txt", "w", encoding='utf-8') \
                 as new_file:
-            new_file.write(self.to_json())
+            new_file.write(Tools.to_json(self))
 
     def borrar(self):
         """Método para borrar fisicamente la información de la clase"""
@@ -60,6 +53,7 @@ class Customer:
                 return customer
         except FileNotFoundError:
             print(f"Cliente {obj_id} no encontrado, no se pudo cargar")
+            return None
 
     def get_next_id(self):
         """Método para establecer el siguiente id de hotel"""
@@ -68,10 +62,10 @@ class Customer:
     def imprimir_detalle(self):
         """Método para imprimir la información del Cliente"""
         print(f"Cliente '{self.first_name}': {self.last_name} "
-              f"- {self.birthdate} - {self.email} - {self.cellphone}")
+              f"- {self.birthdate}")
 
     @classmethod
     def from_dict(cls, dt):
         """Método para crear un objeto desde un diccionario"""
         return cls(dt['obj_id'], dt['first_name'], dt['last_name'],
-                   dt['birthdate'], dt['email'], dt['cellphone'])
+                   dt['birthdate'])

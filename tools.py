@@ -2,6 +2,7 @@
 Ejercicio 3 de programación - Pruebas unitarias
 """
 import os
+import json
 
 
 class Tools:
@@ -25,5 +26,9 @@ class Tools:
         # If there are no numeric parts in filenames
         if not numbers:
             return 1
-        else:
-            return max(numbers)+1
+        return max(numbers)+1
+
+    @staticmethod
+    def to_json(obj):
+        """Método para imprimir los datos de la clase a Json"""
+        return json.dumps(obj.__dict__)

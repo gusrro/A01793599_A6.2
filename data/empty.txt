@@ -1,1 +1,0 @@
-Just for referencing data folder in structure, files are created but on tear down they are removed. Gustavo Ramos.

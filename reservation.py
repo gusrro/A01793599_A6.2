@@ -3,44 +3,38 @@ Ejercicio 3 de programación - Pruebas unitarias
 """
 import json
 import os
+from datetime import datetime
 from hotel import Hotel
 from tools import Tools
 
 
 class Reservation:
-    """Definiendo la clase Hotel"""
+    """Definiendo la clase Reservación"""
 
     # Definición de atributos
     obj_id = -1
     customer_id = -1
     hotel_id = -1
-    room = -1
-    entry_date = "TBD"
-    depart_date = "TBD"
 
     # Definición de métodos
-    def __init__(self, obj_id, customer_id, hotel_id, room,
-                 entry_date, depart_date):
+    def __init__(self, obj_id, customer_id, hotel_id, reservation_data):
         """Constructor de la clase"""
         self.customer_id = customer_id
         self.hotel_id = hotel_id
-        self.room = room
-        self.entry_date = entry_date
-        self.depart_date = depart_date
+        self.room = reservation_data.room
+        self.entry_date = reservation_data.entry_date
+        self.depart_date = reservation_data.depart_date
+        reservation_data.imprimir_detalle()
         if -1 == obj_id:
             self.obj_id = self.get_next_id()
         else:
             self.obj_id = obj_id
 
-    def to_json(self):
-        """Método para imprimir los datos de la clase a Json"""
-        return json.dumps(self.__dict__)
-
     def guardar(self):
         """Método para guardar en archivo la información de la clase"""
         with open(f"./data/R{self.obj_id :04d}.txt", "w", encoding='utf-8') \
                 as new_file:
-            new_file.write(self.to_json())
+            new_file.write(Tools.to_json(self))
         Hotel.create_reservation(self)
 
     def borrar(self):
@@ -62,6 +56,7 @@ class Reservation:
                 return reservation
         except FileNotFoundError:
             print(f"Reservación {obj_id} no encontrada, no se pudo cargar")
+            return None
 
     def get_next_id(self):
         """Método para establecer el siguiente id de hotel"""
@@ -69,11 +64,39 @@ class Reservation:
 
     def imprimir_detalle(self):
         """Método para imprimir la información de Reservación"""
-        print(f"Reservación '{self.customer_id}': {self.hotel_id} - "
-              f"{self.room} - {self.entry_date} - {self.depart_date}")
+        print(f"Reservación '{self.customer_id}': {self.hotel_id}")
+        print(f"Detalle {self.room} - {self.entry_date} - {self.depart_date}")
 
     @classmethod
     def from_dict(cls, dt):
         """Método para crear un objeto desde un diccionario"""
         return cls(dt['obj_id'], dt['customer_id'], dt['hotel_id'],
-                   dt['room'], dt['entry_date'], dt['depart_date'])
+                   ReservationData(dt['room'], dt['entry_date'],
+                                   dt['depart_date']))
+
+
+class ReservationData:
+    """Definiendo la clase de datos de la reservación"""
+    room = -1
+    entry_date = "TBD"
+    depart_date = "TBD"
+
+    def __init__(self, room,
+                 entry_date, depart_date):
+        """Constructor de la clase"""
+        self.room = room
+        self.entry_date = entry_date
+        self.depart_date = depart_date
+
+    def imprimir_detalle(self):
+        """Método para imprimir la información de Reservación"""
+        print(f"Reservación '{self.room} - {self.entry_date} - "
+              f"{self.depart_date}, duración {self.obtener_duracion()}")
+
+    def obtener_duracion(self):
+        """Método para obtener la duración de la reservación"""
+        # convert string to date object
+        d1 = datetime.strptime(self.entry_date, "%d/%m/%Y")
+        d2 = datetime.strptime(self.depart_date, "%d/%m/%Y")
+
+        return d2 - d1

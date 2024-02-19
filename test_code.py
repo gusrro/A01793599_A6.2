@@ -5,7 +5,7 @@ import unittest
 from datetime import date
 from hotel import Hotel
 from customer import Customer
-from reservation import Reservation
+from reservation import Reservation, ReservationData
 
 
 class TestHotelMethods(unittest.TestCase):
@@ -22,8 +22,7 @@ class TestHotelMethods(unittest.TestCase):
             self.numbers.append(self.hotel.obj_id)
 
     def tearDown(self):
-        """Prueba unitaria - Teardown - No hace sentido borrar el objeto"""
-        print("All objects must be destroyed...")
+        """Prueba unitaria - Teardown"""
         for i, _resort_name in enumerate(self.numbers):
             obj_id = self.numbers[i]
             self.hotel = self.hotel.load(obj_id)
@@ -53,6 +52,7 @@ class TestHotelMethods(unittest.TestCase):
 
     def test_print(self):
         """Prueba unitaria - Método Imprimir información"""
+        print("Desplegando información de hoteles")
         self.hotel.imprimir_detalle()
 
     def test_not_load(self):
@@ -61,6 +61,7 @@ class TestHotelMethods(unittest.TestCase):
 
     def test_modify(self):
         """Prueba unitaria - Método Modificar información"""
+        print("Modificando información de hoteles")
         obj_id = self.numbers[1]
         self.hotel = self.hotel.load(obj_id)
         print("Antes de modificar")
@@ -81,15 +82,12 @@ class TestCustomerMethods(unittest.TestCase):
             self.customer = Customer(-1, f"Nombre {i}",
                                          f"Apellido {i}",
                                          date(2000+i, 3+i, 10+i)
-                                         .strftime("%d/%m/%Y"),
-                                         f"email{i}@email.com",
-                                         f"123456789{i}")
+                                         .strftime("%d/%m/%Y"))
             self.customer.guardar()
             self.numbers.append(self.customer.obj_id)
 
     def tearDown(self):
-        """Prueba unitaria - Teardown - No hace sentido borrar el objeto"""
-        print("All objects must be destroyed...")
+        """Prueba unitaria - Teardown"""
         for i, _resort_name in enumerate(self.numbers):
             obj_id = self.numbers[i]
             self.customer = self.customer.load(obj_id)
@@ -159,26 +157,26 @@ class TestReservationMethods(unittest.TestCase):
             self.customer = Customer(-1, f"Nombre {i}",
                                          f"Apellido {i}",
                                          date(2000+i, 3+i, 10+i)
-                                         .strftime("%d/%m/%Y"),
-                                         f"email{i}@email.com",
-                                         f"123456789{i}")
+                                         .strftime("%d/%m/%Y"))
             self.customer.guardar()
             self.numbersC.append(self.customer.obj_id)
             currentc = self.customer.obj_id
 
             # Setting reservations
             self.reservation = Reservation(-1, currentc,
-                                           currenth, (500+i),
-                                           date(2024, 3+i, 15+i)
-                                           .strftime("%d/%m/%Y"),
-                                           date(2024, 3+i, 20+i)
-                                           .strftime("%d/%m/%Y"))
+                                           currenth,
+                                           ReservationData((500+i),
+                                                           date(2024, 3+i, 5+i)
+                                                           .strftime("%d/"
+                                                                     "%m/%Y"),
+                                                           date(2024, 3+i, 8+i)
+                                                           .strftime("%d/"
+                                                                     "%m/%Y")))
             self.reservation.guardar()
             self.numbersR.append(self.reservation.obj_id)
 
     def tearDown(self):
-        """Prueba unitaria - Teardown - No hace sentido borrar el objeto"""
-        print("All objects must be destroyed...")
+        """Prueba unitaria - Teardown"""
         for i, _nonusedvar in enumerate(self.numbersC):
             obj_id = self.numbersC[i]
             self.customer = self.customer.load(obj_id)

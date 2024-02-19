@@ -25,21 +25,19 @@ class Hotel:
             self.obj_id = self.get_next_id()
         else:
             self.obj_id = obj_id
-
-    def to_json(self):
-        """Método para imprimir los datos de la clase a Json"""
-        return json.dumps(self.__dict__)
+        print(f"Creando Hotel {self.obj_id} - {self.resort_name}")
 
     def guardar(self):
         """Método para guardar en archivo la información de la clase"""
         with open(f"./data/H{self.obj_id :04d}.txt", "w", encoding='utf-8') \
                 as new_file:
-            new_file.write(self.to_json())
+            new_file.write(Tools.to_json(self))
 
     def borrar(self):
         """Método para borrar fisicamente la información de la clase"""
         try:
             os.remove(f"./data/H{self.obj_id :04d}.txt")
+            print(f"Borrando Hotel {self.obj_id} - {self.resort_name}")
         except FileNotFoundError:
             print(f"El registro del Hotel {self.obj_id} no existe")
 
@@ -54,6 +52,7 @@ class Hotel:
                 return hotel
         except FileNotFoundError:
             print(f"Hotel {obj_id} no encontrado, no se pudo cargar")
+            return None
 
     def get_next_id(self):
         """Método para establecer el siguiente id de hotel"""
@@ -75,7 +74,7 @@ class Hotel:
                   f"_{reservation.customer_id}"
                   f"_{reservation.obj_id}.txt", "w", encoding='utf-8') \
                 as new_file:
-            new_file.write(reservation.to_json())
+            new_file.write(Tools.to_json(reservation))
 
     @classmethod
     def cancel_reservation(cls, reservation):
